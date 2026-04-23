@@ -64,4 +64,18 @@ public class LectureSuiviController {
         lectureSuiviRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    //Modifier la progression
+    //http://localhost:8080/suivis/1/modifier/5 pour avancer au chapitre 5 du suivi d'id 1
+    @PutMapping("/suivis/{id}/modifier/{chapitre}")
+    public ResponseEntity<LectureSuivi> avancerChapitre(@PathVariable Long id, @PathVariable int chapitre, @RequestBody String entity) {
+        LectureSuivi foundSuivi = lectureSuiviRepository.findById(id).orElse(null);
+        if (foundSuivi == null) {
+            return ResponseEntity.notFound().build();
+        }
+        foundSuivi.setChapitreActuel(chapitre);
+        lectureSuiviRepository.save(foundSuivi);        
+        return ResponseEntity.ok(foundSuivi);
+    }
+
 }
