@@ -34,4 +34,14 @@ public interface WebcomicRepository extends CrudRepository<Webcomic, Long> {
 
     @Query("SELECT SUM(ls.chapitreActuel) FROM Webcomic w JOIN w.lectureSuivi ls")
     Long getTotalChapitresLus();
+
+    List<Webcomic> findByStatut(StatutLecture statut);
+
+    List<Webcomic> findByType(String type);
+
+    List<Webcomic> findByGenres_Id(Long genreId);
+
+    List<Webcomic> findByAuteur_Id(Long auteurId);
+
+    List<Webcomic> findByTitreContainingIgnoreCase(String titre);
 }
