@@ -67,7 +67,7 @@ public class AuteurController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             auteurRepository.deleteById(id);
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.ok().build();
