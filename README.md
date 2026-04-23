@@ -1,33 +1,3 @@
-TΞTRΛ_SKY
-TΞTRΛ_SKY
-tetra_sky
-jvaismedoucher
-
-ivan.k [WKL],  — 12/01/2026 09:11
-https://discord.gg/C9Z9hsq8
-ivan.k [WKL],  — 12/01/2026 14:22
-https://www.notion.so/Methode-cascade-2e6c2e51060180dfa219f75ccb4f61e5?source=copy_link
-ivan soupramanien's Notion on Notion
-Methode cascade | Notion
-Methode cascade | Notion
-TΞTRΛ_SKYTΞTRΛ_SKY [Ыend],  — 14/01/2026 09:33
-https://trello.com/invite/b/69672a6e89c6cffcd34bcf63/ATTI5e111a396ef44422cbce9d1d9bb21a6e5010E717/culture-974
-Trello
-Organize anything, together. Trello is a collaboration tool that organizes your projects into boards. In one glance, know what's being worked on, who's working on what, and where something is in a process.
-ivan.k [WKL],  — 14/01/2026 10:18
-https://github.com/IvanK420/culture974-MIQ
-GitHub
-GitHub - IvanK420/culture974-MIQ: Projet de groupe sur le développ...
-Projet de groupe sur le développement d&amp;#39;une application d&amp;#39;évenementiel à la réunion. - GitHub - IvanK420/culture974-MIQ: Projet de groupe sur le développement d&amp;#39;une applica...
-Projet de groupe sur le développement d&#39;une application d&#39;évenementiel à la réunion.  - GitHub - IvanK420/culture974-MIQ: Projet de groupe sur le développement d&#39;une application d&#39;é...
-TΞTRΛ_SKYTΞTRΛ_SKY [Ыend],  — 14/01/2026 15:38
-https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
-DoctrineFixturesBundle Documentation
-Official documentation of DoctrineFixturesBundle, a bundle for Symfony applications
-Official documentation of DoctrineFixturesBundle, a bundle for Symfony applications
-TΞTRΛ_SKYTΞTRΛ_SKY [Ыend],  — 16/01/2026 15:45
-https://messervices.cyber.gouv.fr/documents-guides/anssi-guide-recommandations_mise_en_oeuvre_site_web_maitriser_standards_securite_cote_navigateur-v2.0.pdf
-ivan.k [WKL],  — 08:47
 # 📖 Projet 1 — Bibliothèque Personnelle de Webcomics
 > Niveau : **Débutant** | Stack : Spring Boot 3.x · JPA · PostgreSQL
 
