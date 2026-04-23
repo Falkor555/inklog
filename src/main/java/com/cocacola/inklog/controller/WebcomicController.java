@@ -33,6 +33,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 @RequestMapping("/webcomics")
 public class WebcomicController {
+	record WebcomicStats(
+    long totalWebcomics,
+    long enCours,
+    long termines,
+    long enPause,
+    long abandonnes,
+    double noteMoyenne,
+    long chapitresLusTotaux,
+    String genrePrefere,
+    String typePrefere
+) {}
 
 	private final WebcomicRepository webcomicRepository;
 
@@ -48,44 +59,44 @@ public class WebcomicController {
 
 		Webcomic savedWebcomic = webcomicRepository.save(webcomic);
 		URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(savedWebcomic.getId())
-            .toUri();
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedWebcomic.getId())
+				.toUri();
 
 		return ResponseEntity.created(location).body(savedWebcomic);
 	}
 
 	@GetMapping
-	public List<Webcomic> findAll() {
-		return webcomicRepository.findAll();
+	public List<Webcomic> getAll() {
+		return (List<Webcomic>) webcomicRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Webcomic> findById(@PathVariable Long id) {
 		return webcomicRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Webcomic> update(@PathVariable Long id, @RequestBody Webcomic webcomic) {
 		return webcomicRepository.findById(id)
-            .map(existingWebcomic -> {
-                validateBusinessRules(webcomic);
+				.map(existingWebcomic -> {
+					validateBusinessRules(webcomic);
 
-                existingWebcomic.setTitre(webcomic.getTitre());
-                existingWebcomic.setType(webcomic.getType());
-                existingWebcomic.setStatut(webcomic.getStatut());
-                existingWebcomic.setSynopsis(webcomic.getSynopsis());
-                existingWebcomic.setChaptotal(webcomic.getChaptotal());
-                existingWebcomic.setAuteur(webcomic.getAuteur());
-                existingWebcomic.setGenres(webcomic.getGenres());
+					existingWebcomic.setTitre(webcomic.getTitre());
+					existingWebcomic.setType(webcomic.getType());
+					existingWebcomic.setStatut(webcomic.getStatut());
+					existingWebcomic.setSynopsis(webcomic.getSynopsis());
+					existingWebcomic.setChaptotal(webcomic.getChaptotal());
+					existingWebcomic.setAuteur(webcomic.getAuteur());
+					existingWebcomic.setGenres(webcomic.getGenres());
 
-                return ResponseEntity.ok(webcomicRepository.save(existingWebcomic));
-            })
-            .orElseGet(() -> ResponseEntity.notFound().build());
-}
+					return ResponseEntity.ok(webcomicRepository.save(existingWebcomic));
+				})
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -96,21 +107,50 @@ public class WebcomicController {
 		webcomicRepository.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
+
 	// Changer le statut d’un webcomic
 	@PutMapping("/{id}/statut")
 	public ResponseEntity<Webcomic> changerStatut(@PathVariable Long id, @RequestBody StatutLecture statut) {
 		return webcomicRepository.findById(id)
-            .map(existingWebcomic -> {
-                existingWebcomic.setStatut(statut);
-                return ResponseEntity.ok(webcomicRepository.save(existingWebcomic));
-            })
-            .orElseGet(() -> ResponseEntity.notFound().build());
+				.map(existingWebcomic -> {
+					existingWebcomic.setStatut(statut);
+					return ResponseEntity.ok(webcomicRepository.save(existingWebcomic));
+				})
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	// Classement par note décroissante
+	@GetMapping("/classement/")
+	public List<Webcomic> classementParNote() {
+		return webcomicRepository.findAllByOrderByLectureSuiviNoteDesc();
+	}
+
+	// Les 5 derniers webcomics consultés
+	@GetMapping("/recents/")
+	public List<Webcomic> cinqDerniersConsultes() {
+		return webcomicRepository.findAllByOrderByDateAjoutDesc().stream().limit(5).toList();
+	}
+
+	// Résumé global de la bibliothèque
+	@GetMapping("stats/resume/")
+	public ResponseEntity<WebcomicStats> resumeGlobal() {
+		WebcomicStats stats = new WebcomicStats(
+            webcomicRepository.count(),
+            webcomicRepository.countByStatut(StatutLecture.EN_COURS),
+            webcomicRepository.countByStatut(StatutLecture.TERMINE),
+            webcomicRepository.countByStatut(StatutLecture.EN_PAUSE),
+            webcomicRepository.countByStatut(StatutLecture.ABANDONNE),
+            webcomicRepository.getAverageNote() != null ? Math.round(webcomicRepository.getAverageNote() * 10.0) / 10.0 : 0.0,
+            webcomicRepository.getTotalChapitresLus() != null ? webcomicRepository.getTotalChapitresLus() : 0,
+            webcomicRepository.getGenrePrefere(),
+            webcomicRepository.getTypePrefere()
+        );
+		return ResponseEntity.ok(stats);
+	}
 	private void validateBusinessRules(Webcomic webcomic) {
 		if (webcomic.getStatut() == StatutLecture.EN_COURS && webcomic.getChaptotal() != null) {
 			throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "chapitreTotal ne peut pas etre renseigne si le statut est EN_COURS");
+					HttpStatus.BAD_REQUEST, "chapitreTotal ne peut pas etre renseigne si le statut est EN_COURS");
 		}
 	}
 }
