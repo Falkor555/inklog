@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @RestController
-@RequestMapping("/api/webcomics")
+@RequestMapping("/webcomics")
 public class WebcomicController {
 
 	private final WebcomicRepository webcomicRepository;
