@@ -4,13 +4,26 @@
  */
 package com.cocacola.inklog.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
 
 import com.cocacola.inklog.model.Webcomic;
+import com.cocacola.inklog.model.enums.StatutLecture;
 
 /**
  *
  * @author tetra
  */
-public interface WebcomicRepository extends JpaRepository<Webcomic, Long> {
+public interface WebcomicRepository extends CrudRepository<Webcomic, Long> {
+
+    List<Webcomic> findByStatut(StatutLecture statut);
+
+    List<Webcomic> findByType(String type);
+
+    List<Webcomic> findByGenres_Id(Long genreId);
+
+    List<Webcomic> findByAuteur_Id(Long auteurId);
+
+    List<Webcomic> findByTitreContainingIgnoreCase(String titre);
 }
