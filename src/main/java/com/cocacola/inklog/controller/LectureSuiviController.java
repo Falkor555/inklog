@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @RestController
 public class LectureSuiviController {
 
@@ -31,6 +30,7 @@ public class LectureSuiviController {
         suivi.setDateDerniereLecture(suivis.getDateDerniereLecture());
         return ResponseEntity.ok(suivi);
     }
+
     @GetMapping("/suivis/{id}")
     public ResponseEntity<LectureSuivi> getLectureSuivi(@PathVariable Long id) {
         LectureSuivi suivi = lectureSuiviRepository.findById(id).orElse(null);
@@ -39,7 +39,7 @@ public class LectureSuiviController {
         }
         return ResponseEntity.ok(suivi);
     }
-    
+
     @GetMapping("/suivis/")
     public ResponseEntity<LectureSuivi> getLectureSuivi() {
         Iterable<LectureSuivi> suivis = lectureSuiviRepository.findAll();
@@ -65,16 +65,18 @@ public class LectureSuiviController {
         return ResponseEntity.noContent().build();
     }
 
-    //Modifier la progression
-    //http://localhost:8080/suivis/1/modifier/5 pour avancer au chapitre 5 du suivi d'id 1
+    // Modifier la progression
+    // http://localhost:8080/suivis/1/modifier/5 pour avancer au chapitre 5 du suivi
+    // d'id 1
     @PutMapping("/suivis/{id}/modifier/{chapitre}")
-    public ResponseEntity<LectureSuivi> avancerChapitre(@PathVariable Long id, @PathVariable int chapitre, @RequestBody String entity) {
+    public ResponseEntity<LectureSuivi> avancerChapitre(@PathVariable Long id, @PathVariable int chapitre,
+            @RequestBody String entity) {
         LectureSuivi foundSuivi = lectureSuiviRepository.findById(id).orElse(null);
         if (foundSuivi == null) {
             return ResponseEntity.notFound().build();
         }
         foundSuivi.setChapitreActuel(chapitre);
-        lectureSuiviRepository.save(foundSuivi);        
+        lectureSuiviRepository.save(foundSuivi);
         return ResponseEntity.ok(foundSuivi);
     }
 

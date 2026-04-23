@@ -96,6 +96,16 @@ public class WebcomicController {
 		webcomicRepository.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
+	// Changer le statut d’un webcomic
+	@PutMapping("/{id}/statut")
+	public ResponseEntity<Webcomic> changerStatut(@PathVariable Long id, @RequestBody StatutLecture statut) {
+		return webcomicRepository.findById(id)
+            .map(existingWebcomic -> {
+                existingWebcomic.setStatut(statut);
+                return ResponseEntity.ok(webcomicRepository.save(existingWebcomic));
+            })
+            .orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
 	private void validateBusinessRules(Webcomic webcomic) {
 		if (webcomic.getStatut() == StatutLecture.EN_COURS && webcomic.getChaptotal() != null) {
