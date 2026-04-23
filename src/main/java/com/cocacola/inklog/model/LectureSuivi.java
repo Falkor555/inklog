@@ -1,28 +1,47 @@
 package com.cocacola.inklog.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class LectureSuivi {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     @Min(0)
     private int chapitreActuel;
+
     @Min(1)
+    @Max(10)
     @Column(nullable = true)
     private Integer note;
-    private String avis;
-    private Date dateDebutLecture;
-    private Date dateDerniereLecture;
 
-    // private Webcomic webcomic;
+    private String avis;
+    private LocalDate dateDebutLecture;
+    private LocalDate dateDerniereLecture;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "webcomic_id", nullable = false, unique = true)
+    @JsonIgnoreProperties("lectureSuivi")
+    private Webcomic webcomic;
+
     public LectureSuivi() {
     }
 
@@ -58,20 +77,41 @@ public class LectureSuivi {
         this.avis = avis;
     }
 
-    public Date getDateDebutLecture() {
+    public LocalDate getDateDebutLecture() {
         return dateDebutLecture;
     }
 
-    public void setDateDebutLecture(Date dateDebutLecture) {
+    public void setDateDebutLecture(LocalDate dateDebutLecture) {
         this.dateDebutLecture = dateDebutLecture;
     }
 
-    public Date getDateDerniereLecture() {
+    public LocalDate getDateDerniereLecture() {
         return dateDerniereLecture;
     }
 
-    public void setDateDerniereLecture(Date dateDerniereLecture) {
+    public void setDateDerniereLecture(LocalDate dateDerniereLecture) {
         this.dateDerniereLecture = dateDerniereLecture;
+    }
+
+    public Webcomic getWebcomic() {
+        return webcomic;
+    }
+
+    public void setWebcomic(Webcomic webcomic) {
+        this.webcomic = webcomic;
+    }
+
+    @PrePersist
+    public void onCreate() {
+        if (dateDebutLecture == null) {
+            dateDebutLecture = LocalDate.now();
+        }
+        dateDerniereLecture = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        dateDerniereLecture = LocalDate.now();
     }
 
 }
