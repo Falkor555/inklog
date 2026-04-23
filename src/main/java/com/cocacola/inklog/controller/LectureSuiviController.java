@@ -36,7 +36,7 @@ public class LectureSuiviController {
         return ResponseEntity.ok(suivis.iterator().next());
     }
 
-    @PutMapping("suivis/{id}")
+    @PutMapping("/suivis/{id}")
     public ResponseEntity<LectureSuivi> updateSuivis(@PathVariable Long id, @RequestBody LectureSuivi entity) {
         LectureSuivi foundSuivi = lectureSuiviRepository.findById(id).orElse(null);
         if (foundSuivi == null) {
@@ -46,7 +46,7 @@ public class LectureSuiviController {
         return ResponseEntity.status(204).build();
     }
 
-    @DeleteMapping("suivis/{id}")
+    @DeleteMapping("/suivis/{id}")
     public ResponseEntity<Void> deleteSuivis(@PathVariable Long id) {
         if (!lectureSuiviRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
