@@ -7,16 +7,8 @@ package com.cocacola.inklog.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.cocacola.inklog.model.Webcomic;
-import com.cocacola.inklog.model.enums.StatutLecture;
-import com.cocacola.inklog.repository.WebcomicRepository;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.cocacola.inklog.model.Webcomic;
+import com.cocacola.inklog.model.enums.StatutLecture;
+import com.cocacola.inklog.repository.WebcomicRepository;
 
 /**
  *
@@ -57,8 +57,8 @@ public class WebcomicController {
 	}
 
 	@GetMapping
-	public List<Webcomic> findAll() {
-		return webcomicRepository.findAll();
+	public List<Webcomic> getAll() {
+		return (List<Webcomic>) webcomicRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
@@ -103,4 +103,41 @@ public class WebcomicController {
                 HttpStatus.BAD_REQUEST, "chapitreTotal ne peut pas etre renseigne si le statut est EN_COURS");
 		}
 	}
+
+	//ENDPOINTS METIER Filtres et Recherche
+	@GetMapping("/en-cours")
+	public List<Webcomic> findEnCours() {
+		return webcomicRepository.findByStatut(StatutLecture.EN_COURS);
+	}
+
+	@GetMapping("/termines")
+	public List<Webcomic> findTermines() {
+		return webcomicRepository.findByStatut(StatutLecture.TERMINE);
+	}
+
+	@GetMapping("/abandonnes")
+	public List<Webcomic> findAbandonnes() {
+		return webcomicRepository.findByStatut(StatutLecture.ABANDONNE);
+	}
+
+	@GetMapping("/type/{type}")
+	public List<Webcomic> findByType(@PathVariable String type) {
+		return webcomicRepository.findByType(type);
+	}
+
+	@GetMapping("/genre/{genreId}")
+	public List<Webcomic> findByGenre(@PathVariable Long genreId) {
+		return webcomicRepository.findByGenres_Id(genreId);
+	}
+
+	@GetMapping("/auteur/{auteurId}")
+	public List<Webcomic> findByAuteur(@PathVariable Long auteurId) {
+		return webcomicRepository.findByAuteur_Id(auteurId);
+	}
+
+	@GetMapping("/recherche?titre=")
+	public List<Webcomic> findByTitre(@RequestParam String titre) {
+		return webcomicRepository.findByTitreContainingIgnoreCase(titre);
+	}
+
 }
