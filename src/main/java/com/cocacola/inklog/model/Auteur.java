@@ -1,8 +1,16 @@
 package com.cocacola.inklog.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 
 //POJO:
 //Encapsulé
@@ -12,12 +20,18 @@ import jakarta.persistence.Id;
 public class Auteur {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotBlank
     private String nom;
     private String pseudonyme;
+    @NotBlank
     private String nationalite;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "auteur")
+    private List<Webcomic> webcomics = new ArrayList<>();
 
     public Auteur() {
     }
@@ -51,6 +65,14 @@ public class Auteur {
     }
     public void setNationalite(String nationalite) {
         this.nationalite = nationalite;
+    }
+
+    public List<Webcomic> getWebcomics() {
+        return webcomics;
+    }
+
+    public void setWebcomics(List<Webcomic> webcomics) {
+        this.webcomics = webcomics;
     }
 
 }
