@@ -4,9 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cocacola.inklog.model.LectureSuivi;
 import com.cocacola.inklog.repository.LectureSuiviRepository;
-
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
