@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cocacola.inklog.model.LectureSuivi;
 import com.cocacola.inklog.repository.LectureSuiviRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+
 @RestController
 public class LectureSuiviController {
-    LectureSuiviRepository lectureSuiviRepository;
+
+    @Autowired
+    private LectureSuiviRepository lectureSuiviRepository;
 
     @PostMapping("/suivis/")
     public ResponseEntity<LectureSuivi> createLectureSuivi(@RequestBody LectureSuivi suivis) {
@@ -26,7 +31,15 @@ public class LectureSuiviController {
         suivi.setDateDerniereLecture(suivis.getDateDerniereLecture());
         return ResponseEntity.ok(suivi);
     }
-
+    @GetMapping("/suivis/{id}")
+    public ResponseEntity<LectureSuivi> getLectureSuivi(@PathVariable Long id) {
+        LectureSuivi suivi = lectureSuiviRepository.findById(id).orElse(null);
+        if (suivi == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(suivi);
+    }
+    
     @GetMapping("/suivis/")
     public ResponseEntity<LectureSuivi> getLectureSuivi() {
         Iterable<LectureSuivi> suivis = lectureSuiviRepository.findAll();
