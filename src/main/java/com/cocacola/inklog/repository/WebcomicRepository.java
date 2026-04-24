@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.cocacola.inklog.model.Webcomic;
 import com.cocacola.inklog.model.enums.StatutLecture;
+import com.cocacola.inklog.model.enums.TypeOuvrage;
 
 /**
  *
@@ -26,7 +27,7 @@ public interface WebcomicRepository extends CrudRepository<Webcomic, Long> {
     @Query("SELECT AVG(ls.note) FROM Webcomic w JOIN w.lectureSuivi ls")
     Double getAverageNote();
 
-    @Query("SELECT w.genres FROM Webcomic w GROUP BY w.genres ORDER BY COUNT(w) DESC LIMIT 1")
+    @Query("SELECT g.nom FROM Webcomic w JOIN w.genres g GROUP BY g ORDER BY COUNT(w) DESC LIMIT 1")
     String getGenrePrefere();
 
     @Query("SELECT w.type FROM Webcomic w GROUP BY w.type ORDER BY COUNT(w) DESC LIMIT 1")
@@ -37,7 +38,7 @@ public interface WebcomicRepository extends CrudRepository<Webcomic, Long> {
 
     List<Webcomic> findByStatut(StatutLecture statut);
 
-    List<Webcomic> findByType(String type);
+    List<Webcomic> findByType(TypeOuvrage type);
 
     List<Webcomic> findByGenres_Id(Long genreId);
 
