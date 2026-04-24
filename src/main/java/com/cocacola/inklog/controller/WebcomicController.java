@@ -7,6 +7,7 @@ package com.cocacola.inklog.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cocacola.inklog.model.Webcomic;
 import com.cocacola.inklog.model.enums.StatutLecture;
+import com.cocacola.inklog.model.enums.TypeOuvrage;
 import com.cocacola.inklog.repository.WebcomicRepository;
 
 /**
@@ -45,11 +47,12 @@ public class WebcomicController {
     String typePrefere
 ) {}
 
-	private final WebcomicRepository webcomicRepository;
+	@Autowired
+	private WebcomicRepository webcomicRepository;
 
-	public WebcomicController(WebcomicRepository webcomicRepository) {
-		this.webcomicRepository = webcomicRepository;
-	}
+	// public WebcomicController(WebcomicRepository webcomicRepository) {
+	// 	this.webcomicRepository = webcomicRepository;
+	// }
 
 	@PostMapping
 	public ResponseEntity<Webcomic> create(@RequestBody Webcomic webcomic) {
@@ -70,6 +73,42 @@ public class WebcomicController {
 	@GetMapping
 	public List<Webcomic> getAll() {
 		return (List<Webcomic>) webcomicRepository.findAll();
+	}
+
+	//ENDPOINTS METIER Filtres et Recherche
+	@GetMapping("/en-cours")
+	public List<Webcomic> findEnCours() {
+		return webcomicRepository.findByStatut(StatutLecture.EN_COURS);
+	}
+
+	@GetMapping("/termines")
+	public List<Webcomic> findTermines() {
+		return webcomicRepository.findByStatut(StatutLecture.TERMINE);
+	}
+
+	@GetMapping("/abandonnes")
+	public List<Webcomic> findAbandonnes() {
+		return webcomicRepository.findByStatut(StatutLecture.ABANDONNE);
+	}
+
+	@GetMapping("/type/{type}")
+	public List<Webcomic> findByType(@PathVariable TypeOuvrage type) {
+		return webcomicRepository.findByType(type);
+	}
+
+	@GetMapping("/genre/{genreId}")
+	public List<Webcomic> findByGenre(@PathVariable Long genreId) {
+		return webcomicRepository.findByGenres_Id(genreId);
+	}
+
+	@GetMapping("/auteur/{auteurId}")
+	public List<Webcomic> findByAuteur(@PathVariable Long auteurId) {
+		return webcomicRepository.findByAuteur_Id(auteurId);
+	}
+
+	@GetMapping("/recherche")
+	public List<Webcomic> findByTitre(@RequestParam String titre) {
+		return webcomicRepository.findByTitreContainingIgnoreCase(titre);
 	}
 
 	@GetMapping("/{id}")
@@ -152,42 +191,6 @@ public class WebcomicController {
 			throw new ResponseStatusException(
 					HttpStatus.BAD_REQUEST, "chapitreTotal ne peut pas etre renseigne si le statut est EN_COURS");
 		}
-	}
-
-	//ENDPOINTS METIER Filtres et Recherche
-	@GetMapping("/en-cours")
-	public List<Webcomic> findEnCours() {
-		return webcomicRepository.findByStatut(StatutLecture.EN_COURS);
-	}
-
-	@GetMapping("/termines")
-	public List<Webcomic> findTermines() {
-		return webcomicRepository.findByStatut(StatutLecture.TERMINE);
-	}
-
-	@GetMapping("/abandonnes")
-	public List<Webcomic> findAbandonnes() {
-		return webcomicRepository.findByStatut(StatutLecture.ABANDONNE);
-	}
-
-	@GetMapping("/type/{type}")
-	public List<Webcomic> findByType(@PathVariable String type) {
-		return webcomicRepository.findByType(type);
-	}
-
-	@GetMapping("/genre/{genreId}")
-	public List<Webcomic> findByGenre(@PathVariable Long genreId) {
-		return webcomicRepository.findByGenres_Id(genreId);
-	}
-
-	@GetMapping("/auteur/{auteurId}")
-	public List<Webcomic> findByAuteur(@PathVariable Long auteurId) {
-		return webcomicRepository.findByAuteur_Id(auteurId);
-	}
-
-	@GetMapping("/recherche?titre=")
-	public List<Webcomic> findByTitre(@RequestParam String titre) {
-		return webcomicRepository.findByTitreContainingIgnoreCase(titre);
 	}
 
 }
